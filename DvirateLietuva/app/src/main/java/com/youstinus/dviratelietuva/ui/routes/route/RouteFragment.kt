@@ -108,13 +108,6 @@ class RouteFragment : Fragment(), OnMapReadyCallback {
         listener = null
     }
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-        //route = ViewModelProviders.of(this).get(Route::class.java)
-
-        // TODO: Use the ViewModel
-    }
-
     override fun onMapReady(googleMap: GoogleMap) {
         //TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
         if (context == null || route == null || view == null) {

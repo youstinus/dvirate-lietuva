@@ -93,7 +93,7 @@ class KmlHelper {
                     // todo implement recursive search for coordinates
                     // todo implement custom lineString points getter
                     val pathPoints = mutableListOf<LatLng>()
-                    if (kmlLayer?.containers != null) {
+                    if (kmlLayer.containers != null) {
                         //for (container2 in kmlLayer.getContainers()) {
                         //    if (container2.hasContainers()) {
                         for (container in kmlLayer.containers) {
@@ -179,7 +179,7 @@ class KmlHelper {
                     // todo implement custom lineString points getter
                     val names = mutableListOf<Destination>()
                     val pathPoints = mutableListOf<LatLng>()
-                    if (kmlLayer?.containers != null) {
+                    if (kmlLayer.containers != null) {
                         //for (container2 in kmlLayer.getContainers()) {
                         //    if (container2.hasContainers()) {
                         for (container in kmlLayer.containers) {
@@ -194,7 +194,7 @@ class KmlHelper {
                                                 val entry =
                                                     it.next() as Map.Entry<*, *> //current entry in a loop
                                                 val name = entry.value as String
-                                                if (name != null && name != "") {
+                                                if (name != "") {
                                                     val point = placemark.geometry as KmlPoint
                                                     val latlng = LatLng(
                                                         point.geometryObject.latitude,
@@ -363,7 +363,7 @@ class KmlHelper {
 
         }
 
-        fun onMarkerClicked(view: View, marker: Marker): Boolean {
+        private fun onMarkerClicked(view: View, marker: Marker): Boolean {
             val tag: Route = marker.tag as Route
 
             val bundle = Bundle()
@@ -373,7 +373,7 @@ class KmlHelper {
             return true
         }
 
-        fun inputStreamToString(inputStream: InputStream): String {
+        private fun inputStreamToString(inputStream: InputStream): String {
             val r = BufferedReader(InputStreamReader(inputStream))
             val total = StringBuilder()
             var line = r.readLine()
@@ -384,7 +384,7 @@ class KmlHelper {
             return total.toString()
         }
 
-        fun getCustomPoints(total: String): MutableList<MutableList<LatLng>> {
+        private fun getCustomPoints(total: String): MutableList<MutableList<LatLng>> {
             val pointsPoints = mutableListOf<MutableList<LatLng>>()
 
             val regex =
@@ -401,7 +401,7 @@ class KmlHelper {
             return pointsPoints
         }
 
-        fun getPointsFromString(coor: String): MutableList<LatLng> {
+        private fun getPointsFromString(coor: String): MutableList<LatLng> {
             val points = mutableListOf<LatLng>()
 
             val matches = Regex("\\s+").split(coor)
