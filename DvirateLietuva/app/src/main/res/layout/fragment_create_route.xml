@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Create route" />
+
+    <EditText
+        android:id="@+id/editText_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:autofillHints="Title"
+        android:ems="10"
+        android:inputType="textPersonName"
+        android:text="Tit" />
+
+    <EditText
+        android:id="@+id/editText_description"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:inputType="textPersonName"
+        android:autofillHints="Description"
+        android:text="Desc" />
+
+    <EditText
+        android:id="@+id/editText_distance"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:inputType="textPersonName"
+        android:autofillHints="Distance"
+        android:text="0" />
+
+    <EditText
+        android:id="@+id/editText_location"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:inputType="textPersonName"
+        android:autofillHints="Location"
+        android:text="Loc" />
+
+    <EditText
+        android:id="@+id/editText_route_storage"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:inputType="textPersonName"
+        android:autofillHints="Route Storage"
+        android:text="Sto" />
+
+    <EditText
+        android:id="@+id/editText_route_url"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:inputType="textPersonName"
+        android:autofillHints="Route url"
+        android:text="Url" />
+
+    <Button
+        android:id="@+id/button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Submit" />
+
+</LinearLayout>

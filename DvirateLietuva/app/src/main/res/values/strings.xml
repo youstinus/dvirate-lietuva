@@ -1,0 +1,28 @@
+<resources>
+    <string name="app_name">Dviratė Lietuva</string>
+    <string name="title_home">Pagrindinis</string>
+    <string name="title_dashboard">Dashboard</string>
+    <string name="title_notifications">Notifications</string>
+    <string name="title_routes">Maršrutai</string>
+    <string name="title_route">Maršrutas</string>
+    <string name="route">Maršrutas</string>
+    <string name="choose_file">Pasirinkti</string>
+    <string name="file_name">Failas</string>
+    <string name="upload">Įkelti</string>
+    <string name="preview">Peržiūra</string>
+    <string name="title_upload">Įkelti</string>
+    <string name="title_map">Žemėlapis</string>
+    <string name="title_about">Apie</string>
+    <string name="title_info" translatable="false">Info</string>
+    <string name="privacy_policy" translatable="false"><a href="https://sites.google.com/view/dvirate-lietuva-privacy-policy">Privatumo politika</a></string>
+    <string name="fix" translatable="false">Fix</string>
+    <string name="about_application">Šioje programoje pateikti įvairūs maršrutai dviračiu Lietuvoje. Patogu naudotis, nes žemėlapyje galima pasirinkti maršrutą pagal lokaciją. Galima peržiūrėti lankytinus objektus, atstumą, sudėtingumą bei kelio tipą. Taip pat galima pasirinkti, kad maršrutas būtų rodomas žemėlapyje (Google maps). Kai kurie žemėlapiai turi ir navigacijos nurodymus. Jeigu turite ir norite pasidalinti įdomiu maršrutu, susisiekti galima youstinus@pm.me (youstinus@protonmail.com). Reikalingas Google maps žemėlapis (My maps nuoroda) su nubrėžta viena ar keliomis linijomis (Add line or shape). Taip pat galite pasidalinti KML tipo failu su coordinatėmis (LineString) bei lankytinais objektais (Placemark). Braižyti maršrutus patogu su įrankiais, kurie leidžia gauti kml, kmz ar gpx tipo failus. Pavyzdžiui: <b><a href="https://www.google.com/mymaps/">Google.com-mymaps</a></b> arba <b><a href="https://www.maps.ie/map-my-route/">Maps.ie-map-my-route</a></b></string>
+    <string name="copyright" translatable="false">© 2019–2020 youstinus</string>
+    <string name="google_my_maps" translatable="false"><a href="https://www.google.com/mymaps/">Google My Maps</a></string>
+    <string name="maps_ie" translatable="false"><a href="https://www.maps.ie/map-my-route/">Maps.ie Map my route</a></string>
+    <string name="empty" translatable="false" />
+    <string name="title_create_route">Sukurti maršrutą</string>
+    <string name="no">Ne</string>
+    <string name="yes">Taip</string>
+    <string name="exit">Išeiti?</string>
+</resources>
