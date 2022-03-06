@@ -1,6 +1,5 @@
 package com.youstinus.dviratelietuva.ui.routes.createroute
 
-import androidx.lifecycle.ViewModelProviders
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -9,11 +8,10 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
+import androidx.lifecycle.ViewModelProvider
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.FirebaseFirestoreSettings
-
 import com.youstinus.dviratelietuva.R
-import com.youstinus.dviratelietuva.models.Route
+import com.youstinus.dviratelietuva.ui.info.InfoViewModel
 
 class CreateRouteFragment : Fragment() {
 
@@ -34,10 +32,9 @@ class CreateRouteFragment : Fragment() {
         return view
     }
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-        viewModel = ViewModelProviders.of(this).get(CreateRouteViewModel::class.java)
-        // TODO: Use the ViewModel
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        viewModel = ViewModelProvider(this)[CreateRouteViewModel::class.java]
+        super.onViewCreated(view, savedInstanceState)
     }
 
     private fun setOnClickListener(view: View) {
@@ -50,22 +47,23 @@ class CreateRouteFragment : Fragment() {
         }
 
         val data = hashMapOf(
-            "title" to view!!.findViewById<EditText>(R.id.editText_title).text.toString(),
-            "description" to view!!.findViewById<EditText>(R.id.editText_description).text.toString(),
-            "distance" to view!!.findViewById<EditText>(R.id.editText_distance).text.toString().toFloat(),
-            "location" to view!!.findViewById<EditText>(R.id.editText_location).text.toString(),
-            "routeStorage" to view!!.findViewById<EditText>(R.id.editText_route_storage).text.toString(),
-            "routeUrl" to view!!.findViewById<EditText>(R.id.editText_route_url).text.toString(),
+            "title" to requireView().findViewById<EditText>(R.id.editText_title).text.toString(),
+            "description" to requireView().findViewById<EditText>(R.id.editText_description).text.toString(),
+            "distance" to requireView().findViewById<EditText>(R.id.editText_distance).text.toString()
+                .toFloat(),
+            "location" to requireView().findViewById<EditText>(R.id.editText_location).text.toString(),
+            "routeStorage" to requireView().findViewById<EditText>(R.id.editText_route_storage).text.toString(),
+            "routeUrl" to requireView().findViewById<EditText>(R.id.editText_route_url).text.toString(),
             "state" to 1,
             "difficulty" to 1,
             "routeType" to 1,
-            "routeKml" to view!!.findViewById<EditText>(R.id.editText_route_storage).text.toString() + ".kml",
+            "routeKml" to requireView().findViewById<EditText>(R.id.editText_route_storage).text.toString() + ".kml",
             "routeImage" to "",
             "roadType" to 5
         )
 
-        FirebaseFirestore.getInstance().collection("routes").add(data).addOnSuccessListener { doc ->
-            Toast.makeText(view!!.context, "Good", Toast.LENGTH_LONG).show()
+        FirebaseFirestore.getInstance().collection("routes").add(data).addOnSuccessListener { _ -> // doc ->
+            Toast.makeText(requireView().context, "Good", Toast.LENGTH_LONG).show()
 
 /*
 *     //var id: String = "",
@@ -81,11 +79,11 @@ class CreateRouteFragment : Fragment() {
     var routeUrl: String = "",
     var roadType: Int = 0, // 0- kelias
     var distance: Double = 0.0*/
-                } .addOnFailureListener {
-            val ex = it
-            Toast.makeText(view!!.context, "Permission", Toast.LENGTH_LONG).show()
-            System.out.println(ex.message)
+        }.addOnFailureListener {
+            //val ex = it
+            Toast.makeText(requireView().context, "Permission", Toast.LENGTH_LONG).show()
+//            System.out.println(ex.message)
         }
 
-        }
+    }
 }

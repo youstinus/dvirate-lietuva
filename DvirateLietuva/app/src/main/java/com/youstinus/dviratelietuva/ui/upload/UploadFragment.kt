@@ -2,7 +2,6 @@ package com.youstinus.dviratelietuva.ui.upload
 
 import android.Manifest
 import android.net.Uri
-import androidx.lifecycle.ViewModelProviders
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -27,8 +26,10 @@ import android.util.Log
 import androidx.annotation.NonNull
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.ViewModelProvider
 import androidx.loader.content.CursorLoader
 import com.google.firebase.storage.FirebaseStorage
+import com.youstinus.dviratelietuva.ui.routes.createroute.CreateRouteViewModel
 import com.youstinus.dviratelietuva.utilities.FilePath
 
 
@@ -62,23 +63,22 @@ class UploadFragment : Fragment() {
         return view
     }
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-        viewModel = ViewModelProviders.of(this).get(UploadViewModel::class.java)
-        // TODO: Use the ViewModel
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        viewModel = ViewModelProvider(this).get(UploadViewModel::class.java)
+        super.onViewCreated(view, savedInstanceState)
     }
 
-    fun setOnClickListeners() {
+    private fun setOnClickListeners() {
         fileBrowseBtn?.setOnClickListener { onFileBrowseClicked() }
         uploadBtn?.setOnClickListener { onFileUploadClicked() }
     }
 
-    fun onFileBrowseClicked() {
+    private fun onFileBrowseClicked() {
 //check if app has permission to access the external storage.
         showFileChooserIntent();
         return
         if (ContextCompat.checkSelfPermission(
-                activity!!.parent,
+                requireActivity().parent,
                 Manifest.permission.READ_EXTERNAL_STORAGE
             ) != PackageManager.PERMISSION_GRANTED
         ) {
@@ -87,14 +87,14 @@ class UploadFragment : Fragment() {
         } else {
             //If permission is not present request for the same.
             ActivityCompat.requestPermissions(
-                activity!!.parent,
+                requireActivity().parent,
                 arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE),
                 READ_REQUEST_CODE
             );
         }
     }
 
-    fun onFileUploadClicked() {
+    private fun onFileUploadClicked() {
         if (file != null) {
 
             uploadFileFirebase()
@@ -131,8 +131,8 @@ class UploadFragment : Fragment() {
      * @param uri
      */
     private fun previewFile(uri: Uri?) {
-        val filePath = FilePath.getPath(context!!,uri!!)//getRealPathFromURIPath(uri!!, requireActivity())
-        file = File(filePath)
+        val filePath = FilePath.getPath(requireContext(),uri!!)//getRealPathFromURIPath(uri!!, requireActivity())
+        file = File(filePath!!)
         Log.d(TAG, "Filename " + file!!.name)
         fileName?.text = file!!.name
 
@@ -178,7 +178,7 @@ class UploadFragment : Fragment() {
     private fun getRealPathFromURIPath2(contentURI: Uri?, activity: Activity): String? {
         //return contentURI!!.path
         val cursor = activity.contentResolver.query(contentURI!!, null, null, null, null)
-        var realPath: String? = ""
+        val realPath: String?
         if (cursor == null) {
             realPath = contentURI.path
         } else {
@@ -191,7 +191,7 @@ class UploadFragment : Fragment() {
         return realPath
     }
 
-    private fun getRealPathFromURIPath(contentURI: Uri?, activity: Activity): String? {
+    private fun getRealPathFromURIPath(contentURI: Uri?): String? {
         var cursor: Cursor? = null;
         try {
             val proj: Array<String> = arrayOf(MediaStore.Images.Media.DATA)
@@ -255,16 +255,15 @@ class UploadFragment : Fragment() {
         uploadBtn?.visibility = View.GONE
         fileName?.visibility = View.GONE
         previewImage?.visibility = View.GONE
-
     }
 
-    fun uploadFileFirebase() {
+    private fun uploadFileFirebase() {
         val storageRef = FirebaseStorage.getInstance().reference
-        val file = Uri.fromFile(File(fileUri!!.path)) //"path/to/images/rivers.jpg"
+        val file = Uri.fromFile(File(fileUri!!.path!!)) //"path/to/images/rivers.jpg"
         val riversRef = storageRef.child("routes/bicycle/${file.lastPathSegment}")
         val uploadTask = riversRef.putFile(file)
 
-// Register observers to listen for when the download is done or if it fails
+        // Register observers to listen for when the download is done or if it fails
         uploadTask.addOnFailureListener { e ->
             // Handle unsuccessful uploads
             println(e)
