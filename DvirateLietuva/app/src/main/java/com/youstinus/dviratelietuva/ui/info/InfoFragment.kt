@@ -15,11 +15,8 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.fragment.findNavController
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.FirebaseFirestoreSettings
 import com.youstinus.dviratelietuva.R
 import com.youstinus.dviratelietuva.models.Route
-import kotlinx.android.synthetic.main.fragment_info.view.*
-import kotlinx.android.synthetic.main.fragment_route_destinations_item.*
 
 
 class InfoFragment : Fragment() {
@@ -73,7 +70,7 @@ class InfoFragment : Fragment() {
                 var i = 0
                 for (doc in documents) {
 
-                    var data = hashMapOf(
+                    var data = mapOf(
                         "state" to 1,
                         "difficulty" to 1,
                         "routeType" to 1,
@@ -117,7 +114,7 @@ class InfoFragment : Fragment() {
         webViewSettings.builtInZoomControls = true
         //webViewSettings.pluginState = PluginState.ON
         val displaymetrics = DisplayMetrics()
-        activity!!.getWindowManager().getDefaultDisplay().getMetrics(displaymetrics)
+        requireActivity().getWindowManager().getDefaultDisplay().getMetrics(displaymetrics)
         val density = resources.displayMetrics.density
         val height = displaymetrics.heightPixels / density / 2 - 50
         val width = displaymetrics.widthPixels / density - 20

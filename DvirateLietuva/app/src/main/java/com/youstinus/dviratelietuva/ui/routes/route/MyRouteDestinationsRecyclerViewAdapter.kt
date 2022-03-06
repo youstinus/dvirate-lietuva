@@ -1,21 +1,15 @@
 package com.youstinus.dviratelietuva.ui.routes.route
 
-import android.util.Log
 import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import com.firebase.ui.firestore.FirestoreRecyclerAdapter
-import com.firebase.ui.firestore.FirestoreRecyclerOptions
 import com.google.android.gms.maps.GoogleMap
-import com.google.firebase.firestore.FirebaseFirestoreException
 import com.youstinus.dviratelietuva.R
 import com.youstinus.dviratelietuva.models.Destination
-import com.youstinus.dviratelietuva.models.Route
 
 import com.youstinus.dviratelietuva.ui.routes.RoutesFragment.OnRoutesItemFragmentInteractionListener
-import kotlinx.android.synthetic.main.fragment_route_destinations_item.view.*
 
 fun Double.format(digits: Int) = "%.${digits}f".format(this)
 
@@ -69,7 +63,7 @@ class MyRouteDestinationsRecyclerViewAdapter(
     //override fun getItemCount(): Int = mValues.size
 
     inner class ViewHolder(val mView: View) : RecyclerView.ViewHolder(mView) {
-        val mTitleView: TextView = mView.textView_destination_title
+        val mTitleView: TextView = mView.findViewById(R.id.textView_destination_title)
         //val mLocationView: TextView = mView.textView_route_location
 
         override fun toString(): String {

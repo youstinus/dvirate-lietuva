@@ -84,5 +84,4 @@ lint/tmp/
 
 .idea/
 ser2.xml
-/src/app/google-services.json
-/src/DvirateLietuva/app/google-services.json
+google-services.json

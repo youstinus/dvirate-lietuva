@@ -56,9 +56,9 @@ class MapFragment : Fragment(), OnMapReadyCallback {
         mMapView.onSaveInstanceState(mapViewBundle)
     }
 
-    override fun onMapReady(googleMap: GoogleMap?) {
+    override fun onMapReady(googleMap: GoogleMap) {
         //TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-        if (googleMap == null || context == null || view == null) {
+        if (context == null || view == null) {
             return
         }
 
@@ -74,7 +74,7 @@ class MapFragment : Fragment(), OnMapReadyCallback {
         )
         //googleMap.setMyLocationEnabled(true);
 
-        FireFun.getRoutesAndDraw(view!!, googleMap)
+        FireFun.getRoutesAndDraw(requireView(), googleMap)
 
         //KmlHelper.setKmlLayer(context!!, googleMap, route!!)
 

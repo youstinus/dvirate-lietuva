@@ -18,8 +18,6 @@ import com.youstinus.dviratelietuva.models.Route
 import com.youstinus.dviratelietuva.ui.routes.RoutesFragment.OnRoutesItemFragmentInteractionListener
 import com.youstinus.dviratelietuva.utilities.Helper
 
-import kotlinx.android.synthetic.main.fragment_routes_item.view.*
-
 fun Double.format(digits: Int) = "%.${digits}f".format(this)
 
 /**
@@ -31,7 +29,7 @@ class MyRoutesRecyclerViewAdapter(
     //private val mValues: List<Route>,
     private val mListener: OnRoutesItemFragmentInteractionListener?,
     private val response: FirestoreRecyclerOptions<Route>
-    ) : FirestoreRecyclerAdapter<Route, MyRoutesRecyclerViewAdapter.ViewHolder>(response) {
+) : FirestoreRecyclerAdapter<Route, MyRoutesRecyclerViewAdapter.ViewHolder>(response) {
 
     private val mOnClickListener: View.OnClickListener
 
@@ -73,7 +71,7 @@ class MyRoutesRecyclerViewAdapter(
 
         if (model.routeImage != "") {
             loadImage(holder, model)
-        }else{
+        } else {
 //         imgImage.setImageDrawable(null);
             holder.mImageView.setImageDrawable(holder.mImageView.context.resources.getDrawable(R.drawable.ic_picture)); //todo seems fishy
         }
@@ -85,18 +83,18 @@ class MyRoutesRecyclerViewAdapter(
     }
 
     override fun onError(e: FirebaseFirestoreException) {
-        Log.e("error", e.message)
+        Log.e("error", e.message!!)
     }
 
     //override fun getItemCount(): Int = mValues.size
 
     inner class ViewHolder(val mView: View) : RecyclerView.ViewHolder(mView) {
-        val mTitleView: TextView = mView.textView_route_title
-        val mLocationView: TextView = mView.textView_route_location
-        val mDistanceView: TextView = mView.textView_distance
-        val mRoadTypeView: TextView = mView.textView_road_type
-        val mDifficultyView: TextView = mView.textView_difficulty
-        val mImageView: ImageView = mView.imageView_route
+        val mTitleView: TextView = mView.findViewById(R.id.textView_route_title)
+        val mLocationView: TextView = mView.findViewById(R.id.textView_route_location)
+        val mDistanceView: TextView = mView.findViewById(R.id.textView_distance)
+        val mRoadTypeView: TextView = mView.findViewById(R.id.textView_road_type)
+        val mDifficultyView: TextView = mView.findViewById(R.id.textView_difficulty)
+        val mImageView: ImageView = mView.findViewById(R.id.imageView_route)
 
         override fun toString(): String {
             return super.toString() + " '" + mTitleView.text + "'"
@@ -106,7 +104,8 @@ class MyRoutesRecyclerViewAdapter(
     // todo FireFun function
     private fun loadImage(holder: ViewHolder, model: Route) {
         var routeType = Helper.getRouteTypeString(model.routeType)
-        val ref = FirebaseStorage.getInstance().reference.child("routes/"+ routeType +"/"+model.routeStorage + "/"+model.routeImage)//getReferenceFromUrl("gs://crocheting-guide.appspot.com/images/" + scheme!!.images + "/" + imagesIndex + ".jpg")
+        val ref =
+            FirebaseStorage.getInstance().reference.child("routes/" + routeType + "/" + model.routeStorage + "/" + model.routeImage)//getReferenceFromUrl("gs://crocheting-guide.appspot.com/images/" + scheme!!.images + "/" + imagesIndex + ".jpg")
         ref.downloadUrl.addOnSuccessListener { uri ->
             /*Picasso.get().load(uri.toString()).into(image, new Callback() {
                     @Override

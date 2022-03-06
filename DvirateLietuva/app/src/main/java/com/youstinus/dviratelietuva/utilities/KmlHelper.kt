@@ -333,13 +333,13 @@ class KmlHelper {
                             )
                         }
 
-                        val max = pointsPoints.maxBy { x -> x.size }
+                        val max = pointsPoints.maxByOrNull { x -> x.size }
                         if (max != null && max.size > 0) {
                             googleMap.addMarker(
                                 MarkerOptions().position(max[0]).title(route.title).draggable(
                                     false
                                 ).icon(BitmapDescriptorFactory.defaultMarker(HUES[index % HUES.size]))
-                            ).tag = route
+                            )?.tag = route
                         }
 
                     } catch (e: XmlPullParserException) {

@@ -195,10 +195,10 @@ class UploadFragment : Fragment() {
         var cursor: Cursor? = null;
         try {
             val proj: Array<String> = arrayOf(MediaStore.Images.Media.DATA)
-            cursor = context!!.getContentResolver().query(contentURI!!, proj, null, null, null);
-            val column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
-            cursor.moveToFirst();
-            return cursor.getString(column_index);
+            cursor = requireContext().getContentResolver().query(contentURI!!, proj, null, null, null);
+            val column_index = cursor?.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+            cursor?.moveToFirst();
+            return cursor?.getString(column_index!!);
         } finally {
             if (cursor != null) {
                 cursor.close();
@@ -222,7 +222,7 @@ class UploadFragment : Fragment() {
 
     override fun onRequestPermissionsResult(requestCode: Int, @NonNull permissions: Array<String>, @NonNull grantResults: IntArray) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        activity!!.onRequestPermissionsResult(
+        requireActivity().onRequestPermissionsResult(
             requestCode,
             permissions,
             grantResults

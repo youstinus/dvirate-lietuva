@@ -20,9 +20,6 @@ import android.widget.TextView
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.google.android.gms.ads.AdRequest
-import com.google.android.gms.ads.AdView
-import com.google.android.gms.ads.MobileAds
 import com.google.firebase.storage.FirebaseStorage
 import com.google.gson.Gson
 import com.squareup.picasso.Picasso
@@ -59,7 +56,6 @@ class RouteFragment : Fragment(), OnMapReadyCallback {
     private var route: Route? = null
     private var mGoogleMap: GoogleMap? = null
     private lateinit var mMapView: MapView
-    private var mAdView: AdView? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -79,8 +75,6 @@ class RouteFragment : Fragment(), OnMapReadyCallback {
         savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.fragment_route, container, false)
-
-        //loadAds(view)
 
         mMapView = view.findViewById(R.id.mapView)
         var mapViewBundle = Bundle()
@@ -121,20 +115,20 @@ class RouteFragment : Fragment(), OnMapReadyCallback {
         // TODO: Use the ViewModel
     }
 
-    override fun onMapReady(googleMap: GoogleMap?) {
+    override fun onMapReady(googleMap: GoogleMap) {
         //TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-        if (googleMap == null || context == null || route == null || view == null) {
+        if (context == null || route == null || view == null) {
             return
         }
 
         mGoogleMap = googleMap
         //KmlHelper.setKmlLayer(context!!, googleMap, route!!)
-        KmlHelper.drawCustomPoints(context!!, googleMap, route!!) { names ->
+        KmlHelper.drawCustomPoints(requireContext(), googleMap, route!!) { names ->
             if (view != null) {
                 if (names.size > 0) {
-                    setDestinationsRecyclerView(view!!, names)
+                    setDestinationsRecyclerView(requireView(), names)
                 } else {
-                    setDestinationsRecyclerView(view!!, mutableListOf(Destination("Nėra objektų")))
+                    setDestinationsRecyclerView(requireView(), mutableListOf(Destination("Nėra objektų")))
                 }
             }
         }
@@ -205,13 +199,6 @@ class RouteFragment : Fragment(), OnMapReadyCallback {
         super.onLowMemory()
         mMapView.onLowMemory();
     }
-
-    /*fun loadAds(view: View) {
-        MobileAds.initialize(context) {}
-        mAdView = view.findViewById(R.id.adView)
-        val adRequest = AdRequest.Builder().build()
-        mAdView?.loadAd(adRequest)
-    }*/
 
     fun populateRouteInfo(view: View) {
         if (route == null)
