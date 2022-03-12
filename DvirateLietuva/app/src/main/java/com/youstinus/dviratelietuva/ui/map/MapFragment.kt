@@ -45,14 +45,17 @@ class MapFragment : Fragment(), OnMapReadyCallback {
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
         var mapViewBundle = outState.getBundle(MAPVIEW_BUNDLE_KEY)
         if (mapViewBundle == null) {
             mapViewBundle = Bundle()
             outState.putBundle(MAPVIEW_BUNDLE_KEY, mapViewBundle)
         }
 
-        mMapView.onSaveInstanceState(mapViewBundle)
+        if (::mMapView.isInitialized){
+            mMapView.onSaveInstanceState(mapViewBundle)
+        }
+
+        super.onSaveInstanceState(outState)
     }
 
     override fun onMapReady(googleMap: GoogleMap) {
@@ -104,17 +107,23 @@ class MapFragment : Fragment(), OnMapReadyCallback {
     }
 
     override fun onStart() {
+        if (::mMapView.isInitialized) {
+            mMapView.onStart();
+        }
         super.onStart()
-        mMapView.onStart();
     }
 
     override fun onResume() {
+        if (::mMapView.isInitialized) {
+            mMapView.onResume();
+        }
         super.onResume()
-        mMapView.onResume();
     }
 
     override fun onPause() {
-        mMapView.onPause();
+        if (::mMapView.isInitialized) {
+            mMapView.onPause();
+        }
         val map = gMap
         if (map != null) {
             val dist = map.cameraPosition.zoom
@@ -130,18 +139,24 @@ class MapFragment : Fragment(), OnMapReadyCallback {
     }
 
     override fun onStop() {
+        if (::mMapView.isInitialized) {
+            mMapView.onStop();
+        }
         super.onStop()
-        mMapView.onStop();
     }
 
     override fun onDestroy() {
-        mMapView.onDestroy();
+        if (::mMapView.isInitialized) {
+            mMapView.onDestroy();
+        }
         super.onDestroy()
     }
 
     override fun onLowMemory() {
+        if (::mMapView.isInitialized) {
+            mMapView.onLowMemory();
+        }
         super.onLowMemory()
-        mMapView.onLowMemory();
     }
 
     private fun initializeMap(view: View, savedInstanceState: Bundle?) {

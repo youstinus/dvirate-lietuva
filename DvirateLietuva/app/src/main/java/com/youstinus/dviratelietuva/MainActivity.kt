@@ -1,12 +1,16 @@
 package com.youstinus.dviratelietuva
 
 import android.os.Bundle
+import android.view.MenuItem
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.navigation.findNavController
+import androidx.navigation.fragment.findNavController
+import androidx.navigation.ui.AppBarConfiguration
+import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
@@ -25,6 +29,7 @@ class MainActivity : AppCompatActivity(), RoutesFragment.OnRoutesItemFragmentInt
     RouteFragment.OnRouteDestinationsItemFragmentInteractionListener {
 
     val fragmentRoutes: Fragment = RoutesFragment()
+    val fragmentRoute: Fragment = RouteFragment()
     val fragmentMap: Fragment = MapFragment()
     val fragmentInfo: Fragment = InfoFragment()
     val fm: FragmentManager = supportFragmentManager
@@ -47,42 +52,100 @@ class MainActivity : AppCompatActivity(), RoutesFragment.OnRoutesItemFragmentInt
         //supportActionBar?.hide()
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
-        /*val appBarConfiguration = AppBarConfiguration(
-            setOf(
-                R.id.navigation_routes, R.id.navigation_dashboard, R.id.navigation_notifications
-            )
-        )
-        setupActionBarWithNavController(navController, appBarConfiguration)*/
+//        val appBarConfiguration = AppBarConfiguration(
+//            setOf(
+//                R.id.navigation_routes, R.id.navigation_map, R.id.navigation_info
+//            )
+//        )
+//        setupActionBarWithNavController(navController, appBarConfiguration)
 
         navView.setupWithNavController(navController)
+        editNav(navView)
         PreferencesHelper.setMapZoomPref(this, mutableListOf(55.2, 23.9, 6.3))
     }
 
+    override fun onSupportNavigateUp(): Boolean {
+        return findNavController(R.id.nav_host_fragment).navigateUp() || super.onSupportNavigateUp()
+    }
+
     private fun editNav(navView: BottomNavigationView) {
-        navView.setOnNavigationItemSelectedListener {
+        navView.setOnItemSelectedListener {
             when (it.itemId) {
                 R.id.navigation_routes -> {
-                    fm.beginTransaction().hide(active).show(fragmentRoutes).commit()
-                    active = fragmentRoutes
+                    findNavController(R.id.nav_host_fragment).popBackStack()
+                    findNavController(R.id.nav_host_fragment).navigate(R.id.navigation_routes)
                     true
                 }
 
                 R.id.navigation_map -> {
-                    fm.beginTransaction().hide(active).show(fragmentMap).commit()
-                    active = fragmentMap
+                    findNavController(R.id.nav_host_fragment).popBackStack()
+                    findNavController(R.id.nav_host_fragment).navigate(R.id.navigation_map)
                     true
                 }
 
                 R.id.navigation_info -> {
-                    fm.beginTransaction().hide(active).show(fragmentInfo).commit()
-                    active = fragmentInfo
+                    findNavController(R.id.nav_host_fragment).popBackStack()
+                    findNavController(R.id.nav_host_fragment).navigate(R.id.navigation_info)
                     true
                 }
+
+//                R.id.navigation_routes -> {
+//                    //fm.beginTransaction().hide(active).hide(active).replace(R.id.nav_host_fragment, fragmentRoutes).commit()
+//                    //active = fragmentRoutes
+////                    supportFragmentManager.beginTransaction().replace(R.id.nav_host_fragment, fragmentRoutes).commit()
+////                    fm.beginTransaction().hide(active).show(fragmentRoutes).commit()
+////                    active = fragmentRoutes
+////                    println("Whaat")
+//                    true
+//                }
+//
+//                R.id.navigation_map -> {
+//                    //supportFragmentManager.beginTransaction().hide(active).replace(R.id.nav_host_fragment, fragmentMap).commit()
+////                    fm.beginTransaction().hide(active).show(fragmentMap).commit()
+//                    //active = fragmentMap
+////                    println("Whaat")
+//                    true
+//                }
+//
+//                R.id.navigation_info -> {
+//
+//                    //supportFragmentManager.beginTransaction().hide(active).replace(R.id.nav_host_fragment, fragmentInfo).commit()//.hide(active).show(fragmentRoute).commit()
+//                    //true
+//                    //fm.beginTransaction().hide(active).show(fragmentInfo).commit()
+//                    //active = fragmentInfo
+//                    //println("Whaat")
+//                    true
+//                }
+//
+////                R.id.navigation_route -> {
+////                    supportFragmentManager.beginTransaction().replace(R.id.nav_host_fragment, fragmentRoute).commit()//.hide(active).show(fragmentRoute).commit()
+////                    true
+////                }
 
                 else -> {
                     //fm.beginTransaction().hide(active).show(fragmentRoutes).commit()
                     //active = fragmentRoutes
+                    //println("Whaats")
                     false
+                }
+            }
+        }
+
+        navView.setOnItemReselectedListener {
+            when (it.itemId) {
+                R.id.navigation_routes -> {
+                    findNavController(R.id.nav_host_fragment).popBackStack()
+                    findNavController(R.id.nav_host_fragment).navigate(R.id.navigation_routes)
+                }
+
+                R.id.navigation_map -> {
+                    findNavController(R.id.nav_host_fragment).popBackStack()
+                    findNavController(R.id.nav_host_fragment).navigate(R.id.navigation_map)
+                }
+
+                R.id.navigation_info -> {
+                    findNavController(R.id.nav_host_fragment).popBackStack()
+                    findNavController(R.id.nav_host_fragment).navigate(R.id.navigation_info)
                 }
             }
         }
@@ -93,7 +156,7 @@ class MainActivity : AppCompatActivity(), RoutesFragment.OnRoutesItemFragmentInt
         //Snackbar.make(findViewById<ConstraintLayout>(R.id.nav_host_fragment), "Grazuolis", Snackbar.LENGTH_LONG).setAction("Action", null).show()
         val bundle = Bundle()
         bundle.putString("route", Gson().toJson(item))
-        findNavController(R.id.nav_host_fragment).navigate(R.id.navigation_route, bundle)
+        findNavController(R.id.nav_host_fragment).navigate(R.id.action_navigation_routes_to_navigation_route, bundle)
     }
 
     override fun onRouteDestinationsItemFragmentInteractionListener(
@@ -107,13 +170,16 @@ class MainActivity : AppCompatActivity(), RoutesFragment.OnRoutesItemFragmentInt
             val marker = item.marker
             if (marker != null) {
                 marker.showInfoWindow()
-                googleMap.animateCamera(CameraUpdateFactory.newLatLng(marker.position), 200, null)
+                googleMap.animateCamera(CameraUpdateFactory.newLatLng(marker.position), 100, null)
             }
         }
         //println("presses on destination: "+item!!.title)
     }
 
     override fun onBackPressed() {
+        //super.onBackPressed()
+        //return
+        //findNavController(R.id.nav_host_fragment).navigateUp()
 // add your code here
         //super.onBackPressed()
         // Initialize a new instance of
@@ -159,6 +225,6 @@ class MainActivity : AppCompatActivity(), RoutesFragment.OnRoutesItemFragmentInt
 
         // Display the alert dialog on app interface
         dialog.show()
-//        super.onBackPressed()
+        //super.onBackPressed()
     }
 }

@@ -21,6 +21,11 @@
         android:icon="@drawable/ic_info"
         android:title="@string/title_info" />
 
+<!--    <item-->
+<!--        android:id="@+id/navigation_route"-->
+<!--        android:title="TODO"-->
+<!--        android:visible="false"/>-->
+
     <!--<item
         android:id="@+id/navigation_create_route"
         android:icon="@drawable/ic_routes"

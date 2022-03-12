@@ -56,14 +56,25 @@
                 <Button
                     android:id="@+id/button_open"
                     android:layout_width="95dp"
-                    android:layout_height="47dp"
+                    android:layout_height="35dp"
                     android:layout_marginTop="8dp"
                     android:layout_marginEnd="8dp"
-                    android:layout_marginRight="8dp"
                     android:background="@drawable/shape_button"
                     android:elevation="10dp"
-                    android:text="Atidaryti"
+                    android:text="@string/map"
                     app:layout_constraintTop_toTopOf="parent"
+                    map:layout_constraintEnd_toEndOf="parent" />
+
+                <Button
+                    android:id="@+id/button_kml"
+                    android:layout_width="95dp"
+                    android:layout_height="35dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:background="@drawable/shape_button"
+                    android:elevation="10dp"
+                    android:text="@string/kml"
+                    app:layout_constraintTop_toBottomOf="@+id/button_open"
                     map:layout_constraintEnd_toEndOf="parent" />
 
                 <TextView

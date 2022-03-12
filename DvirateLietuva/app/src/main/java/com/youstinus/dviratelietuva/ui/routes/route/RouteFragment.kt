@@ -17,6 +17,8 @@ import android.content.Intent
 import android.net.Uri
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.navigation.findNavController
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -26,6 +28,7 @@ import com.squareup.picasso.Picasso
 import com.youstinus.dviratelietuva.models.Destination
 import com.youstinus.dviratelietuva.ui.routes.MyRoutesRecyclerViewAdapter
 import com.youstinus.dviratelietuva.ui.routes.RoutesFragment
+import com.youstinus.dviratelietuva.utilities.FireFun
 import com.youstinus.dviratelietuva.utilities.Helper
 
 const val ARG_ROUTE = "route"
@@ -104,6 +107,8 @@ class RouteFragment : Fragment(), OnMapReadyCallback {
     }
 
     override fun onDetach() {
+        //findNavController().navigate(R.id.action_navigation_route_to_navigation_routes)
+        //findNavController().popBackStack()
         super.onDetach()
         listener = null
     }
@@ -153,26 +158,29 @@ class RouteFragment : Fragment(), OnMapReadyCallback {
     }
 
     override fun onStart() {
+        mMapView.onStart()
         super.onStart()
-        mMapView.onStart();
     }
 
     override fun onResume() {
+        mMapView.onResume()
         super.onResume()
-        mMapView.onResume();
     }
 
     override fun onPause() {
-        mMapView.onPause();
+        mMapView.onPause()
         super.onPause()
     }
 
     override fun onStop() {
+        mMapView.onStop()
         super.onStop()
-        mMapView.onStop();
     }
 
     override fun onDestroy() {
+        //findNavController().popBackStack()
+        //findNavController().navigateUp()
+        //
         mMapView.onDestroy();
         super.onDestroy()
     }
@@ -189,8 +197,8 @@ class RouteFragment : Fragment(), OnMapReadyCallback {
     }
 
     override fun onLowMemory() {
+        mMapView.onLowMemory()
         super.onLowMemory()
-        mMapView.onLowMemory();
     }
 
     fun populateRouteInfo(view: View) {
@@ -215,9 +223,10 @@ class RouteFragment : Fragment(), OnMapReadyCallback {
 
     fun setOnClickListeners(view: View) {
         view.findViewById<Button>(R.id.button_open).setOnClickListener { onOpenClick() }
+        view.findViewById<Button>(R.id.button_kml).setOnClickListener { onKMLDownload()        }
     }
 
-    fun onOpenClick() {
+    private fun onOpenClick() {
         if (route!!.routeUrl == "")
             return
 
@@ -225,6 +234,13 @@ class RouteFragment : Fragment(), OnMapReadyCallback {
         //https://drive.google.com/open?id=12jBeyKQh4uZRI4qqDdLigSX-my05bEGn // https://maps.google.com/maps/d/edit?mid=12jBeyKQh4uZRI4qqDdLigSX-my05bEGn // https://goo.gl/maps/ZtbPGScQzeqAgh4X8 //"https://maps.google.com/maps/d/viewer?mid=12jBeyKQh4uZRI4qqDdLigSX-my05bEGn"
         //browserIntent.setPackage("com.google.android.apps.maps")
         startActivity(browserIntent)
+    }
+
+    private fun onKMLDownload() {
+        if (route!!.routeKml == "")
+            return
+
+        FireFun.getKML(requireView(), route!!)
     }
 
     fun setDestinationsRecyclerView(view: View, names: MutableList<Destination>) {
