@@ -10,6 +10,8 @@ You can download APK file directly from github here [dviratelietuva_1.1.apk](htt
 
 ## Maršrutai
 
+**Visi maršrutai**- https://drive.google.com/drive/folders/10Mct0McyKQxBhDwtJV6bt1gH8IQrdTJr
+
 - Aplink Gauštvinio ežerą - https://www.google.com/maps/d/viewer?mid=1l2HkZAKSV1t5QHGm6ExU51BV8Bq2RklT
 - Aplink Platelių ežerą - https://www.google.com/maps/d/u/0/viewer?mid=1Efi4uVM3hO8WJYqF0JcApKzAT-bPUYaF
 - Aukštagirės pažintinis takas - https://www.google.com/maps/d/viewer?mid=1jL4qXj1Nn9bES1qdEQN9w-WMQhbQus8w
