@@ -26,8 +26,6 @@ class CreateRouteFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.fragment_create_route, container, false)
-
-
         setOnClickListener(view)
         return view
     }

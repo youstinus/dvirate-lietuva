@@ -128,5 +128,7 @@ class InfoFragment : Fragment() {
         t2.movementMethod = LinkMovementMethod.getInstance()
         val t3 = view.findViewById(R.id.textView_about) as TextView
         t3.movementMethod = LinkMovementMethod.getInstance()
+        val t4 = view.findViewById(R.id.textView_github_project) as TextView
+        t4.movementMethod = LinkMovementMethod.getInstance()
     }
 }

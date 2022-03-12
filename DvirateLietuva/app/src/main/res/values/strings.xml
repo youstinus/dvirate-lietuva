@@ -15,6 +15,7 @@
     <string name="title_about">Apie</string>
     <string name="title_info" translatable="false">Info</string>
     <string name="privacy_policy" translatable="false"><a href="https://sites.google.com/view/dvirate-lietuva-privacy-policy">Privatumo politika</a></string>
+    <string name="github_project" translatable="false"><a href="https://github.com/youstinus/dvirate-lietuva">Github Open Source Repository</a></string>
     <string name="fix" translatable="false">Fix</string>
     <string name="about_application">Šioje programoje pateikti įvairūs maršrutai dviračiu Lietuvoje. Patogu naudotis, nes žemėlapyje galima pasirinkti maršrutą pagal lokaciją. Galima peržiūrėti lankytinus objektus, atstumą, sudėtingumą bei kelio tipą. Taip pat galima pasirinkti, kad maršrutas būtų rodomas žemėlapyje (Google maps). Kai kurie žemėlapiai turi ir navigacijos nurodymus. Jeigu turite ir norite pasidalinti įdomiu maršrutu, susisiekti galima youstinus@pm.me (youstinus@protonmail.com). Reikalingas Google maps žemėlapis (My maps nuoroda) su nubrėžta viena ar keliomis linijomis (Add line or shape). Taip pat galite pasidalinti KML tipo failu su coordinatėmis (LineString) bei lankytinais objektais (Placemark). Braižyti maršrutus patogu su įrankiais, kurie leidžia gauti kml, kmz ar gpx tipo failus. Pavyzdžiui: <b><a href="https://www.google.com/mymaps/">Google.com-mymaps</a></b> arba <b><a href="https://www.maps.ie/map-my-route/">Maps.ie-map-my-route</a></b></string>
     <string name="copyright" translatable="false">© 2019–2020 youstinus</string>
@@ -25,4 +26,7 @@
     <string name="no">Ne</string>
     <string name="yes">Taip</string>
     <string name="exit">Išeiti?</string>
+    <string name="map">Map</string>
+    <string name="back">Atgal</string>
+    <string name="kml">KML</string>
 </resources>
