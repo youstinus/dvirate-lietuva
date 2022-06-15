@@ -8,6 +8,10 @@ import androidx.navigation.findNavController
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.model.*
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.FirebaseFirestoreSettings
+import com.google.firebase.firestore.GeoPoint
+import com.google.firebase.firestore.Source
 import com.google.firebase.storage.FirebaseStorage
 import com.google.gson.Gson
 import com.google.maps.android.data.kml.KmlLayer
@@ -225,6 +229,10 @@ class KmlHelper {
 
                     //val markers = mutableListOf<Marker>()
 
+                    // todo INTERCEPT
+                    // updatePointsGeoPoints(route, names)
+                    // todo INTERCEPT
+
                     for (poi in names) {
                         val lat = poi.latLng
                         if (lat != null) {
@@ -259,6 +267,67 @@ class KmlHelper {
             }.addOnFailureListener {
                 // Handle any errors
             }
+        }
+
+        fun drawCustomPointsFromPoints(
+            context: Context,
+            googleMap: GoogleMap,
+            route: Route,
+            callBack: (names: MutableList<Destination>) -> Unit
+        ) {
+            googleMap.moveCamera(
+                CameraUpdateFactory.newLatLngZoom(
+                    LatLng(55.2, 24.0),
+                    6f
+                )
+            )
+
+            val names = mutableListOf<Destination>()
+
+            for (value in route.points) {
+                names.add(
+                    Destination(
+                        value.key,
+                        LatLng(value.value.latitude, value.value.longitude)
+                    )
+                )
+            }
+
+            for (poi in names) {
+                val lat = poi.latLng
+                if (lat != null) {
+                    poi.marker =
+                        googleMap.addMarker(MarkerOptions().position(lat).title(poi.title))
+                }
+            }
+
+            val pointsPoints = geoPointsToLatLng(route.paths)
+
+            val builder = LatLngBounds.Builder()
+
+            for (points in pointsPoints) {
+                googleMap.addPolyline(
+                    PolylineOptions()
+                        .clickable(false)
+                        .addAll(
+                            points
+                        ).width(10f).color(Color.BLUE)
+                )
+
+                for (latLng in points) {
+                    builder.include(latLng)
+                }
+            }
+
+            googleMap.setOnMapLoadedCallback {
+                if (pointsPoints.size > 0) {
+                    val bounds = builder.build()
+                    val cu = CameraUpdateFactory.newLatLngBounds(bounds, 100)
+                    googleMap.animateCamera(cu, 500, null)
+                }
+            }
+
+            callBack.invoke(names)
         }
 
         fun drawAllRoutes(view: View, googleMap: GoogleMap, routes: MutableList<Route>) {
@@ -323,6 +392,10 @@ class KmlHelper {
 
                         val pointsPoints = getCustomPoints(inputStreamToString(myInputStream))
 
+                        // todo INTERCEPT to create paths from kml
+                        // updatePathsGeoPoints(route, pointsPoints)
+                        // todo INTERCEPT
+
                         for (points in pointsPoints) {
                             googleMap.addPolyline(
                                 PolylineOptions()
@@ -338,7 +411,8 @@ class KmlHelper {
                             googleMap.addMarker(
                                 MarkerOptions().position(max[0]).title(route.title).draggable(
                                     false
-                                ).icon(BitmapDescriptorFactory.defaultMarker(HUES[index % HUES.size]))
+                                )
+                                    .icon(BitmapDescriptorFactory.defaultMarker(HUES[index % HUES.size]))
                             )?.tag = route
                         }
 
@@ -351,6 +425,47 @@ class KmlHelper {
                     // Handle any errors
                 }
 
+            }
+
+            googleMap.setOnMarkerClickListener { marker ->
+                onMarkerClicked(
+                    view,
+                    marker
+                )
+            }
+
+
+        }
+
+        fun drawAllRoutesWithPaths(view: View, googleMap: GoogleMap, routes: MutableList<Route>) {
+            routes.forEachIndexed { index, route ->
+                try {
+                    val pointsPoints = geoPointsToLatLng(route.paths)
+
+                    for (points in pointsPoints) {
+                        googleMap.addPolyline(
+                            PolylineOptions()
+                                .clickable(true)
+                                .addAll(
+                                    points
+                                ).width(5f).color(COLORS[index % COLORS.size])
+                        )
+                    }
+
+                    val max = pointsPoints.maxByOrNull { x -> x.size }
+                    if (max != null && max.size > 0) {
+                        googleMap.addMarker(
+                            MarkerOptions().position(max[0]).title(route.title).draggable(
+                                false
+                            ).icon(BitmapDescriptorFactory.defaultMarker(HUES[index % HUES.size]))
+                        )?.tag = route
+                    }
+
+                } catch (e: XmlPullParserException) {
+                    e.printStackTrace()
+                } catch (e: IOException) {
+                    e.printStackTrace()
+                }
             }
 
             googleMap.setOnMarkerClickListener { marker ->
@@ -393,7 +508,7 @@ class KmlHelper {
 
             for (match in matches) {
                 val points = getPointsFromString(match.value)
-                if (points.size > 0) {
+                if (points.size > 1) { // todo changed while removing point coords
                     pointsPoints.add(points)
                 }
             }
@@ -416,5 +531,98 @@ class KmlHelper {
 
             return points
         }
+
+        private fun geoPointsToLatLng(geoPointsPoints: HashMap<String, MutableList<GeoPoint>>): MutableList<MutableList<LatLng>> {
+            val pointsPoints = mutableListOf<MutableList<LatLng>>()
+
+            for (geoPoints in geoPointsPoints) {
+                val points = mutableListOf<LatLng>()
+                for (geoPoint in geoPoints.value) {
+                    val point = LatLng(geoPoint.latitude, geoPoint.longitude)
+                    points.add(point)
+                }
+
+                pointsPoints.add(points)
+            }
+
+            return pointsPoints
+        }
+
+        private fun latLngToGeoPoints(pointsPoints: MutableList<MutableList<LatLng>>): HashMap<String, List<GeoPoint>> {
+            val geoPointsPoints = hashMapOf<String, List<GeoPoint>>()
+            var cnt = 1
+            for (points in pointsPoints) {
+                val geoPoints = mutableListOf<GeoPoint>()
+                for (point in points) {
+                    val geoPoint = GeoPoint(point.latitude, point.longitude)
+                    geoPoints.add(geoPoint)
+                }
+
+                geoPointsPoints["path$cnt"] = geoPoints
+                cnt++
+            }
+
+            return geoPointsPoints
+        }
+
+        private fun latLngToGeoPointsArray(points: HashMap<String, LatLng>): HashMap<String, GeoPoint> {
+            val geoPoints = hashMapOf<String, GeoPoint>()
+            for (point in points) {
+                val geoPoint = GeoPoint(point.value.latitude, point.value.longitude)
+                geoPoints[point.key] = (geoPoint)
+            }
+
+            return geoPoints
+        }
+
+        private fun updatePathsGeoPoints(
+            route: Route,
+            pointsPoints: MutableList<MutableList<LatLng>>
+        ) {
+            val pointsPaths = latLngToGeoPoints(pointsPoints)
+            val mFirestore = FirebaseFirestore.getInstance()
+            mFirestore.firestoreSettings =
+                FirebaseFirestoreSettings.Builder().setPersistenceEnabled(true).build()
+            mFirestore.collection("routes")
+                .whereEqualTo("title", route.title)
+                .get(Source.DEFAULT)
+                .addOnSuccessListener { docs ->
+                    docs.forEach { doc ->
+                        mFirestore.collection("routes")
+                            .document(doc.id)
+                            .update("paths", pointsPaths)
+                    }
+                }.addOnFailureListener { e ->
+                    println(e)
+                }
+        }
+
+        private fun updatePointsGeoPoints(
+            route: Route,
+            names: MutableList<Destination>,
+        ) {
+            val pointsMap: HashMap<String, LatLng> = hashMapOf()
+            for (poi in names) {
+                val lat = poi.latLng!!
+                pointsMap[poi.title] = lat
+            }
+            val points = latLngToGeoPointsArray(pointsMap)
+            val mFirestore = FirebaseFirestore.getInstance()
+            mFirestore.firestoreSettings =
+                FirebaseFirestoreSettings.Builder().setPersistenceEnabled(true).build()
+            mFirestore.collection("routes")
+                .whereEqualTo("title", route.title)
+                .get(Source.DEFAULT)
+                .addOnSuccessListener { docs ->
+                    docs.forEach { doc ->
+                        mFirestore.collection("routes")
+                            .document(doc.id)
+                            .update("points", points)
+                    }
+                }.addOnFailureListener { e ->
+                    println(e)
+                }
+        }
+
     }
 }
