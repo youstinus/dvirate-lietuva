@@ -9,13 +9,9 @@ import android.net.Uri
 import android.os.Build
 import android.os.Environment
 import android.os.Environment.DIRECTORY_DOWNLOADS
-import android.os.ParcelFileDescriptor
-import android.provider.MediaStore
 import android.view.View
 import androidx.core.app.ActivityCompat
-import androidx.core.net.toUri
 import com.google.android.gms.maps.GoogleMap
-import com.google.android.gms.maps.model.LatLng
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.FirebaseFirestoreSettings
@@ -24,8 +20,10 @@ import com.google.firebase.firestore.Source
 import com.google.firebase.storage.FirebaseStorage
 import com.youstinus.dviratelietuva.models.Route
 import java.io.File
+import java.text.SimpleDateFormat
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
+import java.util.*
 
 
 class FireFun {
@@ -96,22 +94,18 @@ class FireFun {
                 FirebaseStorage.getInstance().reference.child("routes/" + routeType + "/" + route.routeStorage + "/" + route.routeKml)
             // var dir = activity.getExternalFilesDir(null) // Environment.getExternalStorageDirectory()
             val dir = Environment.getExternalStorageDirectory()
-            val current = LocalDateTime.now()
-            val formatter = DateTimeFormatter.ofPattern("mmss")
-            val formatted = current.format(formatter)
+            val name = removeSuffix(route.routeKml, ".kml")
+            var localFile = File(dir, "$DIRECTORY_DOWNLOADS/$name.kml")
 
-            val localFile = File(
-                dir,
-                "$DIRECTORY_DOWNLOADS/" + removeSuffix(
-                    route.routeKml,
-                    ".kml"
-                ) + "_" + formatted + ".kml"
-            )
+            var num = 0
+            var save: String
+            while (localFile.exists()) {
+                if (localFile.delete()) { // sometimes deleted file still does not let create new one
+                    break
+                }
 
-            //localFile.createNewFile()
-            var deleted = false
-            if (localFile.exists()) {
-                deleted = localFile.delete()
+                save = name + num++
+                localFile = File(dir, "$DIRECTORY_DOWNLOADS/$save.kml")
             }
 
             ref.getFile(localFile).addOnSuccessListener { stream ->
@@ -120,9 +114,22 @@ class FireFun {
                     "Downloaded",// to " + DIRECTORY_DOWNLOADS + "/" + route.routeKml,
                     500, // Snackbar.LENGTH_SHORT
                 ).setAction("Action", null).show()
-            }.addOnFailureListener { ex ->
-                Snackbar.make(v, "Failed", 500 /*Snackbar.LENGTH_SHORT*/).setAction("Action", null)
-                    .show()
+            }.addOnFailureListener { ex1 ->
+                val simpleDate = SimpleDateFormat("mmss")
+                val currentDate = simpleDate.format(Date())
+                val file = File(dir, "$DIRECTORY_DOWNLOADS/$name$currentDate.kml")
+                ref.getFile(file)
+                    .addOnSuccessListener { stream ->
+                        Snackbar.make(
+                            v,
+                            "Downloaded",// to " + DIRECTORY_DOWNLOADS + "/" + route.routeKml,
+                            500, // Snackbar.LENGTH_SHORT
+                        ).setAction("Action", null).show()
+                    }.addOnFailureListener { ex ->
+                        Snackbar.make(v, "Failed", 500 /*Snackbar.LENGTH_SHORT*/)
+                            .setAction("Action", null)
+                            .show()
+                    }
             }
 
 //            ref.getBytes(5000000).addOnSuccessListener { bytes ->
