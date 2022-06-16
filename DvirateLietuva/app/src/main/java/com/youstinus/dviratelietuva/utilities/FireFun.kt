@@ -24,6 +24,8 @@ import com.google.firebase.firestore.Source
 import com.google.firebase.storage.FirebaseStorage
 import com.youstinus.dviratelietuva.models.Route
 import java.io.File
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 
 
 class FireFun {
@@ -92,12 +94,18 @@ class FireFun {
             val routeType = Helper.getRouteTypeString(route.routeType)
             val ref =
                 FirebaseStorage.getInstance().reference.child("routes/" + routeType + "/" + route.routeStorage + "/" + route.routeKml)
-            var dir =
-                activity.getExternalFilesDir(null) // Environment.getExternalStorageDirectory()
-            dir = Environment.getExternalStorageDirectory()
+            // var dir = activity.getExternalFilesDir(null) // Environment.getExternalStorageDirectory()
+            val dir = Environment.getExternalStorageDirectory()
+            val current = LocalDateTime.now()
+            val formatter = DateTimeFormatter.ofPattern("mmss")
+            val formatted = current.format(formatter)
+
             val localFile = File(
                 dir,
-                DIRECTORY_DOWNLOADS + "/" + route.routeKml
+                "$DIRECTORY_DOWNLOADS/" + removeSuffix(
+                    route.routeKml,
+                    ".kml"
+                ) + "_" + formatted + ".kml"
             )
 
             //localFile.createNewFile()
@@ -113,7 +121,8 @@ class FireFun {
                     500, // Snackbar.LENGTH_SHORT
                 ).setAction("Action", null).show()
             }.addOnFailureListener { ex ->
-                Snackbar.make(v, "Failed", 500, /*Snackbar.LENGTH_SHORT*/).setAction("Action", null).show()
+                Snackbar.make(v, "Failed", 500 /*Snackbar.LENGTH_SHORT*/).setAction("Action", null)
+                    .show()
             }
 
 //            ref.getBytes(5000000).addOnSuccessListener { bytes ->
@@ -126,6 +135,12 @@ class FireFun {
 //            }.addOnFailureListener { ex ->
 //                Snackbar.make(v, "Failed", Snackbar.LENGTH_LONG).setAction("Action", null).show()
 //            }
+        }
+
+        fun removeSuffix(s: String?, suffix: String?): String? {
+            return if (s != null && suffix != null && s.endsWith(suffix)) {
+                s.substring(0, s.length - suffix.length)
+            } else s
         }
 
         fun downloadFile(
@@ -149,7 +164,10 @@ class FireFun {
         fun hasPermissions(context: Context?, permissions: List<String>): Boolean {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && context != null) {
                 return permissions.all { permission ->
-                    ActivityCompat.checkSelfPermission(context, permission) == PackageManager.PERMISSION_GRANTED
+                    ActivityCompat.checkSelfPermission(
+                        context,
+                        permission
+                    ) == PackageManager.PERMISSION_GRANTED
                 }
             }
 
