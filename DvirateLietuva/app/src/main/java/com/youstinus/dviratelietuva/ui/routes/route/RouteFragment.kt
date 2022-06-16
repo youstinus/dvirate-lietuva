@@ -120,8 +120,18 @@ class RouteFragment : Fragment(), OnMapReadyCallback {
         }
 
         mGoogleMap = googleMap
+        // todo choose wisely
         //KmlHelper.setKmlLayer(context!!, googleMap, route!!)
-        KmlHelper.drawCustomPoints(requireContext(), googleMap, route!!) { names ->
+         //KmlHelper.drawCustomPoints(requireContext(), googleMap, route!!) { names ->
+         //    if (view != null) {
+         //        if (names.size > 0) {
+         //            setDestinationsRecyclerView(requireView(), names)
+         //        } else {
+         //            setDestinationsRecyclerView(requireView(), mutableListOf(Destination("Nėra objektų")))
+         //        }
+         //    }
+         //}
+        KmlHelper.drawCustomPointsFromPoints(requireContext(), googleMap, route!!) { names ->
             if (view != null) {
                 if (names.size > 0) {
                     setDestinationsRecyclerView(requireView(), names)
@@ -240,7 +250,7 @@ class RouteFragment : Fragment(), OnMapReadyCallback {
         if (route!!.routeKml == "")
             return
 
-        FireFun.getKML(requireView(), route!!)
+        FireFun.getKML(requireActivity(), requireView(), route!!)
     }
 
     fun setDestinationsRecyclerView(view: View, names: MutableList<Destination>) {

@@ -1,5 +1,7 @@
 package com.youstinus.dviratelietuva.models
 
+import com.google.firebase.firestore.GeoPoint
+
 data class Route(
     //var id: String = "",
     var title: String = "",
@@ -13,5 +15,7 @@ data class Route(
     var routeStorage: String = "",
     var routeUrl: String = "",
     var roadType: Int = 0, // 0- kelias
-    var distance: Double = 0.0
+    var distance: Double = 0.0,
+    var paths: HashMap<String, MutableList<GeoPoint>> = hashMapOf(),
+    var points: HashMap<String, GeoPoint> = hashMapOf(),
 )
