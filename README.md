@@ -6,7 +6,7 @@
 
 ## APK
 
-You can download APK file directly from github here [dviratelietuva_v1.2.apk](https://github.com/youstinus/dvirate-lietuva/releases/download/v1.2/dviratelietuva_v1.2.apk)
+You can download APK file directly from github here [dviratelietuva_v1.3.apk](https://github.com/youstinus/dvirate-lietuva/releases/download/v1.3/dviratelietuva_v1.3.apk)
 
 ## Maršrutai
 
